@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: cabeza('Reservar')}"></head>
+<body>
+<nav th:replace="~{fragments :: menu}"></nav>
+
+<main class="contenedor">
+  <section class="hero">
+    <h1>Reserva tu mesa</h1>
+    <p>Elige fecha, hora y cantidad de personas para ver las mesas disponibles.</p>
+  </section>
+
+  <div th:replace="~{fragments :: mensajes}"></div>
+
+  <!-- GET /disponibilidad?fecha=...&hora=...&personas=... (los name= de los inputs son los nombres de los parametros) -->
+  <form class="tarjeta formulario" method="get" th:action="@{/disponibilidad}">
+    <div class="campo">
+      <label for="fecha">Fecha</label>
+      <input type="date" id="fecha" name="fecha" th:value="${hoy}" th:min="${hoy}" required>
+    </div>
+    <div class="campo">
+      <label for="hora">Hora</label>
+      <select id="hora" name="hora" required>
+        <option th:each="h : ${horas}" th:value="${h}" th:text="${h}">12:00</option>
+      </select>
+    </div>
+    <div class="campo">
+      <label for="personas">Personas</label>
+      <input type="number" id="personas" name="personas" min="1" max="30" value="2" required>
+    </div>
+    <button class="boton" type="submit">Ver mesas disponibles</button>
+  </form>
+</main>
+
+<footer th:replace="~{fragments :: pie}"></footer>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<!--
+  Fragmentos reutilizables. Cada pagina los inserta con th:replace, por ejemplo:
+    <head th:replace="~{fragments :: cabeza('Inicio')}"></head>
+    <nav  th:replace="~{fragments :: menu}"></nav>
+-->
+<head th:fragment="cabeza(titulo)">
+  <meta charset="UTF-8">
+  <!-- Base del diseno responsivo: sin esta etiqueta el celular mostraria la pagina "en grande" -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${titulo} + ' · Sabor Gourmet'">Sabor Gourmet</title>
+  <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+
+<!-- Menu de navegacion (se adapta a pantallas pequenas con flex-wrap en style.css) -->
+<nav th:fragment="menu" class="menu">
+  <a class="marca" th:href="@{/}">Sabor Gourmet</a>
+  <div class="enlaces">
+    <a th:href="@{/}">Reservar</a>
+    <a th:href="@{/reservas}">Mis reservas</a>
+    <a th:href="@{/admin/mesas}">Admin mesas</a>
+    <a th:href="@{/admin/reservas}">Admin reservas</a>
+  </div>
+</nav>
+
+<!-- Mensajes de exito / error. "exito" y "error" los agrega el controller al Model (o como flash attribute) -->
+<div th:fragment="mensajes">
+  <p class="alerta exito" th:if="${exito}" th:text="${exito}"></p>
+  <p class="alerta error" th:if="${error}" th:text="${error}"></p>
+</div>
+
+<footer th:fragment="pie" class="pie">
+  <p>Restaurante Sabor Gourmet · Sistema de reservas</p>
+</footer>
+
+</body>
+</html>

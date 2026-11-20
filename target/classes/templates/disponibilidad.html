@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: cabeza('Disponibilidad')}"></head>
+<body>
+<nav th:replace="~{fragments :: menu}"></nav>
+
+<main class="contenedor">
+  <h1>Mesas disponibles</h1>
+  <p class="resumen">
+    <span th:text="${#temporals.format(fecha, 'dd-MM-yyyy')}">20-11-2026</span> ·
+    <span th:text="${hora}">20:00</span> ·
+    <span th:text="${personas}">2</span> persona(s)
+  </p>
+
+  <!-- th:if / th:unless: muestra un bloque u otro segun si la lista viene vacia -->
+  <p class="alerta error" th:if="${#lists.isEmpty(mesas)}">
+    No hay mesas disponibles para ese horario. Prueba con otra hora u otra fecha.
+  </p>
+
+  <section class="rejilla" th:unless="${#lists.isEmpty(mesas)}">
+    <!-- th:each repite la tarjeta por cada mesa de la lista -->
+    <article class="tarjeta mesa" th:each="m : ${mesas}">
+      <h2>Mesa <span th:text="${m.numero}">1</span></h2>
+      <p>Capacidad: <strong th:text="${m.capacidad}">4</strong> personas</p>
+      <p th:if="${m.ubicacion}">Ubicacion: <span th:text="${m.ubicacion}">Terraza</span></p>
+      <!-- URL con parametros: @{/ruta(param=valor, ...)} -->
+      <a class="boton" th:href="@{/reservas/nueva(mesaId=${m.id}, fecha=${fecha}, hora=${hora}, personas=${personas})}">Reservar</a>
+    </article>
+  </section>
+
+  <p><a class="enlace" th:href="@{/}">&larr; Cambiar busqueda</a></p>
+</main>
+
+<footer th:replace="~{fragments :: pie}"></footer>
+</body>
+</html>

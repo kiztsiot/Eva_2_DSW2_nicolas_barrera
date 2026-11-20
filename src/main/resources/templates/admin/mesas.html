@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: cabeza('Admin - Mesas')}"></head>
+<body>
+<nav th:replace="~{fragments :: menu}"></nav>
+
+<main class="contenedor">
+  <div class="encabezado-pagina">
+    <h1>Administracion de mesas</h1>
+    <a class="boton" th:href="@{/admin/mesas/nueva}">+ Nueva mesa</a>
+  </div>
+
+  <div th:replace="~{fragments :: mensajes}"></div>
+
+  <div class="tabla-contenedor">
+    <table class="tabla">
+      <thead>
+        <tr><th>N°</th><th>Capacidad</th><th>Ubicacion</th><th>Estado</th><th>Acciones</th></tr>
+      </thead>
+      <tbody>
+        <tr th:each="m : ${mesas}">
+          <td data-label="N°" th:text="${m.numero}">1</td>
+          <td data-label="Capacidad" th:text="${m.capacidad}">4</td>
+          <td data-label="Ubicacion" th:text="${m.ubicacion} ?: '-'">Terraza</td>
+          <td data-label="Estado">
+            <span class="etiqueta" th:classappend="${m.activa} ? 'ok' : 'cancelada'"
+                  th:text="${m.activa} ? 'Activa' : 'Inactiva'">Activa</span>
+          </td>
+          <td data-label="Acciones" class="acciones">
+            <a class="boton chico" th:href="@{/admin/mesas/{id}/editar(id=${m.id})}">Editar</a>
+            <form method="post" th:action="@{/admin/mesas/{id}/estado(id=${m.id})}">
+              <button class="boton chico secundario" type="submit"
+                      th:text="${m.activa} ? 'Desactivar' : 'Activar'">Desactivar</button>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<footer th:replace="~{fragments :: pie}"></footer>
+</body>
+</html>

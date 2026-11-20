@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: cabeza('Admin - Reservas')}"></head>
+<body>
+<nav th:replace="~{fragments :: menu}"></nav>
+
+<main class="contenedor">
+  <h1>Reservas del restaurante</h1>
+
+  <div th:replace="~{fragments :: mensajes}"></div>
+
+  <!-- Filtro por dia: GET /admin/reservas?fecha=... -->
+  <form class="tarjeta formulario" method="get" th:action="@{/admin/reservas}">
+    <div class="campo">
+      <label for="fecha">Filtrar por fecha</label>
+      <input type="date" id="fecha" name="fecha" th:value="${fecha}">
+    </div>
+    <button class="boton" type="submit">Filtrar</button>
+    <a class="enlace" th:href="@{/admin/reservas}">Ver todas</a>
+  </form>
+
+  <p class="alerta error" th:if="${#lists.isEmpty(reservas)}">No hay reservas para mostrar.</p>
+
+  <div class="tabla-contenedor" th:unless="${#lists.isEmpty(reservas)}">
+    <table class="tabla">
+      <thead>
+        <tr><th>Fecha</th><th>Hora</th><th>Mesa</th><th>Cliente</th><th>Contacto</th><th>Personas</th><th>Estado</th><th></th></tr>
+      </thead>
+      <tbody>
+        <tr th:each="r : ${reservas}">
+          <td data-label="Fecha" th:text="${#temporals.format(r.fecha, 'dd-MM-yyyy')}">20-11-2026</td>
+          <td data-label="Hora" th:text="${r.hora}">20:00</td>
+          <td data-label="Mesa" th:text="${r.mesa.numero}">1</td>
+          <td data-label="Cliente" th:text="${r.cliente.nombreCompleto}">Cliente</td>
+          <td data-label="Contacto"><span th:text="${r.cliente.email}">mail</span>
+              <span th:if="${r.cliente.telefono}" th:text="' · ' + ${r.cliente.telefono}"></span></td>
+          <td data-label="Personas" th:text="${r.cantidadPersonas}">2</td>
+          <td data-label="Estado">
+            <span class="etiqueta" th:classappend="${r.confirmada} ? 'ok' : 'cancelada'" th:text="${r.estado}">CONFIRMADA</span>
+          </td>
+          <td class="acciones">
+            <form method="post" th:if="${r.confirmada}" th:action="@{/admin/reservas/{id}/cancelar(id=${r.id})}"
+                  onsubmit="return confirm('¿Cancelar esta reserva?');">
+              <button class="boton chico peligro" type="submit">Cancelar</button>
+            </form>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<footer th:replace="~{fragments :: pie}"></footer>
+</body>
+</html>

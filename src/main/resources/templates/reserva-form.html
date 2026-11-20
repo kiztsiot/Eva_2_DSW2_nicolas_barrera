@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: cabeza('Confirmar reserva')}"></head>
+<body>
+<nav th:replace="~{fragments :: menu}"></nav>
+
+<main class="contenedor angosto">
+  <h1>Confirmar reserva</h1>
+
+  <div th:replace="~{fragments :: mensajes}"></div>
+
+  <section class="tarjeta resumen-reserva" th:if="${mesa}">
+    <p><strong>Mesa <span th:text="${mesa.numero}">1</span></strong>
+       (capacidad <span th:text="${mesa.capacidad}">4</span>)</p>
+    <p>
+      <span th:text="${#temporals.format(reservaForm.fecha, 'dd-MM-yyyy')}">20-11-2026</span> ·
+      <span th:text="${#temporals.format(reservaForm.hora, 'HH:mm')}">20:00</span> ·
+      <span th:text="${reservaForm.cantidadPersonas}">2</span> persona(s)
+    </p>
+  </section>
+
+  <!-- th:object enlaza el formulario con el DTO; *{campo} se refiere a una propiedad de ese objeto -->
+  <form class="tarjeta formulario vertical" method="post" th:action="@{/reservas}" th:object="${reservaForm}">
+    <!-- Datos de la reserva que viajan ocultos -->
+    <input type="hidden" th:field="*{mesaId}">
+    <input type="hidden" th:field="*{fecha}">
+    <input type="hidden" th:field="*{hora}">
+    <input type="hidden" th:field="*{cantidadPersonas}">
+    <p class="error-campo" th:if="${#fields.hasErrors('mesaId')}" th:errors="*{mesaId}"></p>
+    <p class="error-campo" th:if="${#fields.hasErrors('fecha')}" th:errors="*{fecha}"></p>
+    <p class="error-campo" th:if="${#fields.hasErrors('hora')}" th:errors="*{hora}"></p>
+    <p class="error-campo" th:if="${#fields.hasErrors('cantidadPersonas')}" th:errors="*{cantidadPersonas}"></p>
+
+    <div class="campo">
+      <label for="nombre">Nombre</label>
+      <input type="text" id="nombre" th:field="*{nombre}" maxlength="80">
+      <span class="error-campo" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></span>
+    </div>
+    <div class="campo">
+      <label for="apellido">Apellido</label>
+      <input type="text" id="apellido" th:field="*{apellido}" maxlength="80">
+      <span class="error-campo" th:if="${#fields.hasErrors('apellido')}" th:errors="*{apellido}"></span>
+    </div>
+    <div class="campo">
+      <label for="email">Email</label>
+      <input type="email" id="email" th:field="*{email}" maxlength="120">
+      <span class="error-campo" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+    </div>
+    <div class="campo">
+      <label for="telefono">Telefono (opcional)</label>
+      <input type="tel" id="telefono" th:field="*{telefono}" maxlength="20">
+      <span class="error-campo" th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}"></span>
+    </div>
+
+    <button class="boton" type="submit">Confirmar reserva</button>
+    <a class="enlace" th:href="@{/}">Cancelar</a>
+  </form>
+</main>
+
+<footer th:replace="~{fragments :: pie}"></footer>
+</body>
+</html>

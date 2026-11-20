@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: cabeza('No encontrado')}"></head>
+<body>
+<nav th:replace="~{fragments :: menu}"></nav>
+
+<main class="contenedor angosto">
+  <h1>Ups, algo no esta bien</h1>
+  <p class="alerta error" th:text="${mensaje}">Mensaje de error</p>
+  <p><a class="boton" th:href="@{/}">Volver al inicio</a></p>
+</main>
+
+<footer th:replace="~{fragments :: pie}"></footer>
+</body>
+</html>

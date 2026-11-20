@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: cabeza('Modificar reserva')}"></head>
+<body>
+<nav th:replace="~{fragments :: menu}"></nav>
+
+<main class="contenedor angosto">
+  <h1>Modificar reserva</h1>
+
+  <div th:replace="~{fragments :: mensajes}"></div>
+
+  <section class="tarjeta resumen-reserva">
+    <p><strong>Mesa <span th:text="${reserva.mesa.numero}">1</span></strong>
+       (capacidad <span th:text="${reserva.mesa.capacidad}">4</span>) ·
+       <span th:text="${reserva.cliente.nombreCompleto}">Cliente</span></p>
+    <p class="nota">La mesa no se puede cambiar. Si necesitas otra, cancela esta reserva y crea una nueva.</p>
+  </section>
+
+  <p class="alerta error" th:unless="${reserva.confirmada}">Esta reserva esta cancelada y no se puede modificar.</p>
+
+  <form class="tarjeta formulario vertical" method="post"
+        th:if="${reserva.confirmada}"
+        th:action="@{/reservas/{id}/editar(id=${reserva.id})}" th:object="${form}">
+    <div class="campo">
+      <label for="fecha">Fecha</label>
+      <input type="date" id="fecha" th:field="*{fecha}" th:min="${hoy}">
+      <span class="error-campo" th:if="${#fields.hasErrors('fecha')}" th:errors="*{fecha}"></span>
+    </div>
+    <div class="campo">
+      <label for="hora">Hora</label>
+      <!-- Se marca la opcion actual con th:selected comparando objetos LocalTime -->
+      <select id="hora" name="hora">
+        <option th:each="h : ${horas}" th:value="${h}" th:text="${h}" th:selected="${h == form.hora}">12:00</option>
+      </select>
+      <span class="error-campo" th:if="${#fields.hasErrors('hora')}" th:errors="*{hora}"></span>
+    </div>
+    <div class="campo">
+      <label for="cantidadPersonas">Personas</label>
+      <input type="number" id="cantidadPersonas" th:field="*{cantidadPersonas}" min="1" max="30">
+      <span class="error-campo" th:if="${#fields.hasErrors('cantidadPersonas')}" th:errors="*{cantidadPersonas}"></span>
+    </div>
+
+    <button class="boton" type="submit">Guardar cambios</button>
+    <a class="enlace" th:href="@{/reservas(email=${reserva.cliente.email})}">Volver</a>
+  </form>
+</main>
+
+<footer th:replace="~{fragments :: pie}"></footer>
+</body>
+</html>

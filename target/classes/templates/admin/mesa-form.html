@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: cabeza('Admin - Mesa')}"></head>
+<body>
+<nav th:replace="~{fragments :: menu}"></nav>
+
+<main class="contenedor angosto">
+  <h1 th:text="${titulo}">Nueva mesa</h1>
+
+  <div th:replace="~{fragments :: mensajes}"></div>
+
+  <!-- El mismo formulario sirve para crear y editar: el controller entrega "accion" (a donde se envia) -->
+  <form class="tarjeta formulario vertical" method="post" th:action="@{${accion}}" th:object="${form}">
+    <div class="campo">
+      <label for="numero">Numero de mesa</label>
+      <input type="number" id="numero" th:field="*{numero}" min="1">
+      <span class="error-campo" th:if="${#fields.hasErrors('numero')}" th:errors="*{numero}"></span>
+    </div>
+    <div class="campo">
+      <label for="capacidad">Capacidad (personas)</label>
+      <input type="number" id="capacidad" th:field="*{capacidad}" min="1" max="30">
+      <span class="error-campo" th:if="${#fields.hasErrors('capacidad')}" th:errors="*{capacidad}"></span>
+    </div>
+    <div class="campo">
+      <label for="ubicacion">Ubicacion</label>
+      <input type="text" id="ubicacion" th:field="*{ubicacion}" maxlength="50" placeholder="Terraza, Salon principal...">
+      <span class="error-campo" th:if="${#fields.hasErrors('ubicacion')}" th:errors="*{ubicacion}"></span>
+    </div>
+    <div class="campo check">
+      <input type="checkbox" id="activa" th:field="*{activa}">
+      <label for="activa">Mesa activa (se puede reservar)</label>
+    </div>
+
+    <button class="boton" type="submit">Guardar</button>
+    <a class="enlace" th:href="@{/admin/mesas}">Volver</a>
+  </form>
+</main>
+
+<footer th:replace="~{fragments :: pie}"></footer>
+</body>
+</html>
